@@ -15,8 +15,8 @@ Este feature permite estructurar y registrar cada acción de extracción de info
 ## Asignación de papers a investigadores
 Permite distribuir sistemáticamente los artículos entre los miembros del equipo. Se pueden asignar uno o varios revisores por paper para asegurar validación cruzada.
 [[03_Capabilities#Trabajo colaborativo entre investigadores]]
-## Discutir discrepancias y acuerdos en la extracción de información
-Ofrece un espacio para que los revisores puedan comparar sus extracciones, ver diferencias y discutirlas mediante comentarios o chats embebidos. Incluye un flujo de resolución para alcanzar consensos.
+## Comparar anotaciones
+Ofrece un espacio para que los revisores puedan comparar sus extracciones y ver diferencias.
 [[03_Capabilities#Trabajo colaborativo entre investigadores]]
 ## Estandarizar la recolección de información mediante formularios de extracción
 Usa formularios estructurados con campos específicos para extraer información clave (nombre del revisor, fecha, título, autores, notas.).

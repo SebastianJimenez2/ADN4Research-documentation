@@ -88,6 +88,7 @@ La **extracción de datos** se define como la etapa donde se diseñan **formular
 
 > Guidelines for performing Systematic Literature Reviews in Software Engineering, Kitchenham, Tabla 7, pag30.
 
+El formulario de extracción en una Revisión Sistemática de la Literatura (RSL) **debe contener toda la información relevante extraída de cada artículo**, lo que incluye los datos necesarios para responder a la pregunta de investigación y cumplir los objetivos del estudio. Esto abarca detalles sobre métodos, participantes, contexto, intervenciones, resultados, y cualquier otra variable relevante según el protocolo de la revisión[](https://uv-es.libguides.com/revisiones_sistematicas_Salud/extraccion_datos)[](https://biblioguias.unav.edu/revisionessistematicas/extraccion)
 # PRISMA
 
 PRISMA significa Preferred Reporting Items for Systematic Reviews and Meta-Analyses (en español: Elementos de Reporte Preferidos para Revisiones Sistemáticas y Metaanálisis).
