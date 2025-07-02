@@ -53,3 +53,9 @@ Esta capability habilita a varios investigadores a trabajar en paralelo o en con
 ---
 ## Centralizar la información recolectada
 Integra toda la información extraída en un repositorio único y estructurado. Evita la dispersión entre múltiples documentos y formatos. Permite almacenar datos de manera organizada, con campos definidos, relación con las fuentes, evidencias asociadas y disponibilidad para otras etapas del proceso (síntesis, análisis, redacción).
+
+# Capabilities
+What?
+1. Formulario de extracción
+2. Anotaciones
+3. 
