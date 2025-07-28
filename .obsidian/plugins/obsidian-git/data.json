@@ -1,6 +1,7 @@
 {
   "commitMessage": "chore: vault backup {{date}}",
   "autoCommitMessage": "chore: vault backup {{date}}",
+  "commitMessageScript": "",
   "commitDateFormat": "YYYY-MM-DD HH:mm:ss",
   "autoSaveInterval": 0,
   "autoPushInterval": 0,
@@ -33,7 +34,7 @@
   "dateInHistoryView": true,
   "diffStyle": "split",
   "lineAuthor": {
-    "show": false,
+    "show": true,
     "followMovement": "inactive",
     "authorDisplay": "initials",
     "showCommitHash": false,
@@ -53,7 +54,7 @@
     },
     "textColorCss": "var(--text-muted)",
     "ignoreWhitespace": false,
-    "gutterSpacingFallbackLength": 5,
+    "gutterSpacingFallbackLength": 13,
     "lastShownAuthorDisplay": "initials",
     "lastShownDateTimeFormatOptions": "date"
   }

@@ -5,5 +5,6 @@
   "trashOption": "local",
   "newFileLocation": "current",
   "attachmentFolderPath": "_resources",
-  "promptDelete": false
+  "promptDelete": false,
+  "readableLineLength": false
 }
