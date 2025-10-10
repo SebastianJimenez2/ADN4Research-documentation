@@ -1,105 +1,88 @@
+# language: en
+@modulo:descarga @componente:data-provision
 Feature: Provisión de Datos Bajo Demanda
-
   Como los Módulos de Selección y Extracción
   Quiero solicitar metadatos y archivos PDF al Módulo de Descarga
   Para que pueda cumplir mis funciones sin acceder directamente a los datos brutos
 
+  Rule: Los metadatos se sirven según estado y filtros aplicados
+
   Background:
-    Given el Metadata Repository contiene artículos con diferentes estados
-    And el Document Storage contiene archivos PDF descargados
-    And el API Gateway está operativo para manejar peticiones de lectura
+    Given el repositorio contiene artículos con diferentes estados
+    And el almacenamiento contiene archivos PDF descargados
+    And el servicio de provisión está operativo
 
   Scenario: Módulo de Selección solicita metadatos para revisión
-    Given el Metadata Repository contiene 25 artículos con estado "fetched" para el lote de búsqueda "batch-2024-001"
+    Given el repositorio contiene 25 artículos con estado "recuperado" para el lote "batch-2024-001"
     And los metadatos incluyen: título, autores, resumen, año, DOI, y fuente original
-    
-    When el Módulo de Selección solicita los metadatos del lote "batch-2024-001" a través del API Gateway
-    
-    Then el API Gateway debe delegar la petición de lectura al Paper State Manager
-    And el Paper State Manager debe consultar el Metadata Repository para obtener los 25 artículos
-    And debe filtrar solo los artículos con estado "fetched"
-    And debe retornar una respuesta exitosa con la lista completa de metadatos estructurada
-    And la respuesta debe incluir el ID del lote, el número total de artículos, y los metadatos de cada artículo
+    When el Módulo de Selección solicita los metadatos del lote "batch-2024-001"
+    Then la respuesta incluye código 200
+    And el cuerpo contiene los 25 artículos con estado "recuperado"
+    And cada artículo incluye todos sus metadatos canónicos
+    And se emite el evento "MetadataServed" con count=25 y consumer="seleccion"
 
-  Scenario: Módulo de Extracción solicita PDF que ya está disponible
-    Given el artículo con ID "paper-extract-001" tiene el estado "fulltext_available"
-    And su archivo PDF correspondiente "paper-extract-001.pdf" está guardado en el Document Storage
-    And el archivo tiene un tamaño válido y no está corrupto
-    
-    When el Módulo de Extracción solicita el PDF del artículo "paper-extract-001" al API Gateway
-    
-    Then el API Gateway debe delegar la petición de entrega del archivo al Download Manager
-    And el Download Manager debe verificar que el archivo existe en el Document Storage
-    And debe recuperar el archivo PDF desde el Document Storage
-    And debe retornar el archivo PDF exitosamente con los headers correctos (content-type: application/pdf)
+  Scenario: Módulo de Extracción solicita PDF disponible
+    Given el artículo "paper-extract-001" tiene estado "texto_completo_disponible"
+    And su archivo PDF está guardado en el almacenamiento con checksum válido
+    When el Módulo de Extracción solicita el PDF del artículo "paper-extract-001"
+    Then la respuesta incluye código 200
+    And el header Content-Type es "application/pdf"
+    And el cuerpo contiene el archivo PDF
+    And se emite el evento "PDFServed" con id="paper-extract-001" y consumer="extraccion"
 
-  Scenario: Solicitud de PDF cuya descarga está pendiente
-    Given el artículo con ID "paper-pending-001" tiene el estado "approved"
-    And la descarga del PDF está en progreso pero no ha terminado
-    And NO existe el archivo correspondiente en el Document Storage
-    
+  Scenario: Solicitud de PDF con descarga en progreso
+    Given el artículo "paper-pending-001" tiene estado "descargando"
     When el Módulo de Extracción solicita el PDF del artículo "paper-pending-001"
-    
-    Then el sistema debe verificar el estado del artículo en el Metadata Repository
-    And debe detectar que el estado es "approved" pero no "fulltext_available"
-    And debe responder con un código de estado HTTP 202 (Accepted) indicando que el recurso no está listo
-    And debe incluir un mensaje explicativo: "PDF download in progress, please retry later"
-    And NO debe intentar retornar ningún archivo
+    Then la respuesta incluye código 202
+    And el mensaje indica "Descarga de PDF en progreso, reintente más tarde"
+    And se emite el evento "PDFRequestedWhileDownloading"
 
-  Scenario: Solicitud de PDF de un artículo rechazado
-    Given el artículo con ID "paper-rejected-001" tiene el estado "rejected"
-    And NO existe ningún archivo PDF para este artículo en el Document Storage
-    
+  Scenario: Solicitud de PDF de artículo rechazado
+    Given el artículo "paper-rejected-001" tiene estado "rechazado"
     When el Módulo de Extracción solicita el PDF del artículo "paper-rejected-001"
-    
-    Then el sistema debe verificar el estado del artículo
-    And debe detectar que el estado es "rejected"
-    And debe responder con un código de estado HTTP 403 (Forbidden)
-    And debe incluir un mensaje explicativo: "Article was rejected during selection phase"
+    Then la respuesta incluye código 403
+    And el mensaje indica "Artículo rechazado durante fase de selección"
+    And se emite el evento "PDFAccessDenied" con motivo="articulo_rechazado"
 
-  Scenario: Solicitud de recurso con ID completamente inválido
-    Given no existe ningún artículo con el ID "COMPLETELY-FAKE-ID-999" en el Metadata Repository
-    
-    When cualquier módulo solicita el PDF del artículo "COMPLETELY-FAKE-ID-999"
-    
-    Then el sistema debe buscar el artículo en el Metadata Repository
-    And debe confirmar que el ID no existe
-    And debe responder con un código de estado HTTP 404 (Not Found)
-    And debe incluir un mensaje explicativo: "Article ID not found"
-    And debe registrar la petición inválida en los logs del sistema
+  Scenario: Solicitud de recurso con ID inexistente
+    Given no existe ningún artículo con ID "FAKE-ID-999" en el repositorio
+    When cualquier módulo solicita el PDF del artículo "FAKE-ID-999"
+    Then la respuesta incluye código 404
+    And el mensaje indica "ID de artículo no encontrado"
+    And se emite el evento "InvalidResourceRequested"
 
-  Scenario: Módulo de Selección solicita metadatos de un lote inexistente
-    Given no existe ningún lote de búsqueda con ID "batch-inexistente-999"
-    
+  Scenario: Módulo de Selección solicita metadatos de lote inexistente
+    Given no existe ningún lote con ID "batch-inexistente-999"
     When el Módulo de Selección solicita los metadatos del lote "batch-inexistente-999"
-    
-    Then el Paper State Manager debe buscar el lote en el Metadata Repository
-    And debe confirmar que el lote no existe
-    And debe responder con un código de estado HTTP 404 (Not Found)
-    And debe incluir un mensaje: "Search batch not found"
+    Then la respuesta incluye código 404
+    And el mensaje indica "Lote de búsqueda no encontrado"
 
-  Scenario: Solicitud de metadatos con filtros específicos
-    Given el Metadata Repository contiene artículos de diferentes años: 2020, 2021, 2022, 2023, 2024
-    And el Módulo de Selección especifica un filtro de año: "2022-2024"
-    And especifica un filtro de fuente: "IEEE Xplore"
-    
-    When el Módulo de Selección solicita metadatos con estos filtros aplicados
-    
-    Then el Paper State Manager debe aplicar los filtros sobre los datos en el Metadata Repository
-    And debe retornar solo los artículos que coincidan con ambos criterios: año 2022-2024 Y fuente IEEE Xplore
-    And la respuesta debe incluir el número de artículos filtrados vs el total disponible
-    And debe mantener la estructura completa de metadatos para cada artículo filtrado
+  Rule: Los filtros se aplican sobre metadatos canónicos
 
-  Scenario: Verificación de integridad de archivo PDF antes de entrega
-    Given el artículo con ID "paper-integrity-001" tiene estado "fulltext_available"
-    And existe un archivo "paper-integrity-001.pdf" en el Document Storage
-    And el archivo está corrupto o tiene tamaño cero
-    
+  Scenario: Solicitud de metadatos con filtros múltiples
+    Given el repositorio contiene artículos de años 2020, 2021, 2022, 2023, 2024
+    And existen artículos de fuentes "IEEE Xplore", "Scopus", "Manual"
+    When se solicitan metadatos con filtros año="2022-2024" y fuente="IEEE Xplore"
+    Then la respuesta incluye solo artículos del año 2022, 2023 o 2024
+    And todos los artículos retornados tienen fuente "IEEE Xplore"
+    And el resumen indica total_filtrados vs total_disponibles
+    And se emite el evento "FilteredQueryExecuted" con los criterios aplicados
+
+  Rule: La integridad se verifica antes de servir archivos
+
+  Scenario: Verificación de integridad de PDF corrupto
+    Given el artículo "paper-integrity-001" tiene estado "texto_completo_disponible"
+    And el archivo PDF asociado está corrupto o tiene tamaño cero
     When el Módulo de Extracción solicita el PDF del artículo "paper-integrity-001"
-    
-    Then el Download Manager debe verificar la integridad del archivo antes de entregarlo
-    And debe detectar que el archivo está corrupto
-    And debe responder con un código de estado HTTP 500 (Internal Server Error)
-    And debe incluir un mensaje: "PDF file is corrupted or unavailable"
-    And debe registrar el problema de integridad en los logs
-    And debe actualizar el estado del artículo a "download_failed" a través del Paper State Manager
+    Then la respuesta incluye código 500
+    And el mensaje indica "Archivo PDF corrupto o no disponible"
+    And se emite el evento "PDFIntegrityCheckFailed"
+    And el estado del artículo cambia a "descarga_fallida"
+
+  Scenario: Provisión exitosa con enlace firmado de corta duración
+    Given el artículo "paper-secure-001" tiene estado "texto_completo_disponible"
+    And la política de seguridad requiere enlaces firmados
+    When se solicita el PDF del artículo "paper-secure-001"
+    Then la respuesta incluye un enlace firmado con expiración en 15 minutos
+    And el enlace incluye token de autenticación temporal
+    And se emite el evento "SecureLinkGenerated" con ttl=900
