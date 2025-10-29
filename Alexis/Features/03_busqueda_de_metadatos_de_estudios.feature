@@ -1,30 +1,27 @@
 # language: es
 @modulo:busqueda @componente:metadatos @mvp
-Característica: Enriquecimiento y consolidación de metadatos desde el listado de descubrimiento
-  Como investigador
-  Quiero enriquecer mi listado de estudios con metadatos canónicos
-  Para continuar la revisión con registros completos y trazables
+Característica: Enriquecimiento de estudios con metadatos completos para análisis detallado
+  Como investigador realizando una revisión sistemática
+  Quiero obtener información detallada de cada estudio encontrado en el descubrimiento
+  Para poder evaluar su relevancia y aplicar criterios de inclusión/exclusión informados
 
   Antecedentes:
-    Dado que existe un resultado de descubrimiento "disc-001" con el siguiente listado mínimo:
-      | id_estudio | título_minimo                  | enlace                      | fuente_origen_listado |
-      | st-101     | Deep Learning for Software     | https://example.org/101     | Scopus                |
-      | st-102     | Bug Prediction with ML         | https://example.org/102     | IEEE Xplore           |
-      | st-125     | Title only                     | https://example.org/125     | Scopus                |
-    Y la tabla de precedencia de fuentes está definida:
-      | fuente      | precedencia |
-      | Scopus      | 2           |
-      | IEEE Xplore | 1           |
+    Dado que existe un resultado de descubrimiento previo con un listado de estudios
+    Y cada estudio del listado incluye al menos: título, enlace y fuente de origen
 
-  @lote @mvp
-  Escenario: Enriquecimiento en lote del listado de descubrimiento
-    Cuando el sistema solicita y recolecta metadatos para todos los estudios de "disc-001"
-    Entonces se genera, por cada estudio, un registro canónico con trazabilidad por campo
-    Y cada estudio queda con estado "consolidado" o "no_consolidado" según reglas de esenciales (título, autores, año_publicación)
-    Y el resumen del proceso incluye:
-      | métrica                |
-      | total_solicitados      |
-      | total_consolidados     |
-      | total_no_consolidados  |
-      | totales_por_fuente     |
-    Y el listado contiene estudios únicos según la clave de deduplicación
+  @metadatos @automatico
+  Escenario: Enriquecimiento automático de metadatos desde las fuentes académicas
+    Cuando solicito obtener los metadatos completos de los estudios
+    Entonces el sistema consulta automáticamente las fuentes académicas para cada estudio
+    Y genera un registro canónico con la información obtenida
+    Y cada estudio queda marcado según la completitud de su información
+    Y se registra la fuente de origen de cada metadato obtenido
+    Y el sistema proporciona un resumen del proceso indicando cuántos estudios fueron consolidados
+
+  @metadatos @manual
+  Escenario: Completar metadatos manualmente cuando la obtención automática falla
+    Dado que algunos estudios no pudieron consolidarse automáticamente
+    Cuando ingreso manualmente la información faltante de un estudio
+    Entonces el sistema actualiza el registro con los metadatos proporcionados
+    Y el estudio queda marcado como consolidado
+    Y se mantiene trazabilidad indicando qué campos son automáticos y cuáles manuales

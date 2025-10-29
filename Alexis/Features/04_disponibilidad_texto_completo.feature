@@ -1,48 +1,40 @@
 # language: es
 @modulo:busqueda @componente:texto-completo @mvp
-Característica: Disponibilidad de texto completo de artículos
-  Como investigador
-  Quiero acceder al texto completo de los artículos consolidados
-  Para continuar con la revisión y extracción de evidencia
-
+Característica: Acceso al texto completo de estudios para análisis profundo
+  Como investigador realizando una revisión sistemática
+  Quiero obtener el documento completo de los estudios relevantes
+  Para poder leerlos, extraer datos y evaluar su calidad metodológica
 
   Antecedentes:
-    Dada una estrategia normalizada con descubrimiento previo
-    Y existen estudios con registro canónico en estado "consolidado"
-    Y hay una política activa de validación de archivos (formato permitido y verificación de integridad)
+    Dado que existen estudios con metadatos consolidados de mi revisión sistemática
+    Y necesito acceder al texto completo para realizar análisis detallado
 
-  @texto-completo @exitoso
-  Escenario: Obtención exitosa desde el origen editorial
-    Dado el estudio "st-201" está "consolidado" y el enlace editorial ofrece texto completo
-    Cuando el sistema obtiene el archivo y supera la validación de integridad
-    Entonces el estudio pasa a "texto_completo_disponible"
-    Y el origen del texto queda registrado como "editorial"
-    Y se registra la huella de integridad del archivo
-    Y la traza del intento incluye fuentes consultadas, evidencia del éxito y timestamp
+  @texto-completo @acceso-publico
+  Escenario: Obtener texto completo cuando está disponible públicamente
+    Dado que un estudio tiene el texto completo de acceso público
+    Cuando solicito obtener el documento
+    Entonces el sistema descarga automáticamente el archivo
+    Y valida la integridad del documento
+    Y el estudio queda marcado como "texto_completo_disponible"
+    Y se registra el origen del texto como "automático"
+
+  @texto-completo @busqueda-alternativa
+  Escenario: Buscar en fuentes alternativas cuando no está público en la fuente original
+    Dado que un estudio no tiene acceso público en su fuente original
+    Cuando el sistema intenta obtener el texto completo
+    Entonces busca automáticamente en fuentes alternativas utilizando el DOI
+    Y si encuentra el documento en una fuente alternativa, lo descarga
+    Y el estudio queda marcado como "texto_completo_disponible"
+    Y se registra desde qué fuente alternativa se obtuvo el texto
 
   @texto-completo @manual
-  Escenario: Carga manual habilita disponibilidad inmediata
-    Dado el estudio "st-220" está en "texto_no_disponible"
-    Y el investigador aporta un archivo de texto completo
-    Cuando el sistema valida formato e integridad y adjunta el archivo al estudio
-    Entonces el estudio pasa a "texto_completo_disponible"
-    Y el origen del texto queda registrado como "manual"
-    Y la traza conserva el motivo previo de indisponibilidad y registra la corrección con timestamp
-
-  @texto-completo @indisponible
-  Esquema del escenario: Indisponibilidad de texto completo (motivos frecuentes)
-    Dado el estudio "<estudio_id>" está "consolidado"
-    Y el intento de obtener el texto completo desde el origen editorial falla por "<motivo>"
-    Cuando el sistema registra la indisponibilidad
-    Entonces el estudio queda en "texto_no_disponible" con motivo "<motivo>"
-    Y la traza del intento incluye fuentes consultadas y evidencia del fallo
-    Y se sugiere "<sugerencia>" como siguiente acción
-
-    Ejemplos:
-      | estudio_id | motivo             | sugerencia           |
-      | st-210     | acceso_restringido | carga_manual         |
-      | st-211     | enlace_invalido    | reintento            |
-      | st-212     | embargo_editorial  | esperar_fin_embargo  |
+  Escenario: Cargar manualmente el texto completo cuando no está disponible automáticamente
+    Dado que un estudio no pudo obtenerse automáticamente en ninguna fuente
+    Cuando cargo manualmente el archivo del texto completo
+    Entonces el sistema valida el formato e integridad del archivo
+    Y vincula el documento al estudio correspondiente
+    Y el estudio queda marcado como "texto_completo_disponible"
+    Y se registra el origen del texto como "manual"
 
 
 
