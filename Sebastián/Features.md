@@ -35,25 +35,6 @@ Para las capabilities del proyecto se acordó lo siguiente:
 ## Describiendo features
 ![[Pasted image 20250731115628.png]]
 **¿Por qué estoy haciendo esto?** => Cuáles son los <mark style="background: #ADCCFFA6;">objetivos de negocio</mark>
-
 **¿Quiénes son los actores clave?** => Comportamientos que pueden cambiar/mejorar
-
 **¿Cómo puede cambiar el comportamiento?** => Cambios en el comportamiento que ayuden a lograr los objetivos de negocio
-
 **¿Qué features pueden ayudar a este comportamiento a cambiar?**
-
-
-```mermaid
-%%{init: {
-  "flowchart": {
-    "defaultRenderer": "dagre-wrapper",   /* o "elk" */
-    "padding": 0,                         /* padding texto ↔ borde */
-    "htmlLabels": false,                  /* usa <text> SVG más “apretado” */
-    "nodeSpacing": 24, "rankSpacing": 24  /* opcional: compáctalo */
-  },
-  "themeVariables": { "fontSize": "12px" } /* opcional */
-}}%%
-flowchart LR
-  A[A] --> B[B]
-
-```
