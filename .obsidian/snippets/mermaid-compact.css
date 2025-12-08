@@ -1,0 +1,5 @@
+/* Quita padding/márgenes internos del label del nodo */
+.mermaid .node foreignObject > div {
+    padding: 0px !important;
+    margin: 0px !important;
+}

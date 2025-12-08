@@ -1,6 +1,6 @@
 # **¿Qué disponibilidad de tiempo tiene para seguir teniendo reuniones de discusión?**
 Los stakeholders mencionaron que si pueden colaborar durante todo el proceso, sin embargo, uno de ellos destacó que para confirmar su asistencia debe conocer las fechas y eventos importantes.
-# ¿Cómo realiza actualmente una revisión sistemática? (qué pasos se siguen, qué herramientas se utilizan)**
+# ¿Cómo realiza actualmente una revisión sistemática? (qué pasos se siguen, qué herramientas se utilizan)
 ## Stakeholder 1 #JHONATTAN
 ### Herramientas que ha usado:
 - Rayyan.
@@ -9,7 +9,7 @@ Los stakeholders mencionaron que si pueden colaborar durante todo el proceso, si
 - Palabras clave
 - Construir cadenas para encontrar los papers que estén más apegados a la investigación. #CRISTIAN 
       **Problema:** Las búsqueda se hacen de forma dispersa, cada uno buscaba de distintas formas, cadenas distintas, resultados no iguales. No había trazabilidad en las cadenas.
-- Descarte de los papers que no estaban apegados al objetivo de la investigación. #ALEXIS
+- Descarte de los papers que no estaban apegados al objetivo de la investigación. #SEBAS
 - Una vez encontrados, los papers fueron etiquetados #SEBAS 
 - Leer entender y buscar la parte que responda a las preguntas de investigación. #JONATHAN 
 ## Stakeholder 2 #PAMELA
@@ -46,9 +46,9 @@ Problemas:
 - No se puede hacer relación entre las bibliografías encontradas por referencia de los paper, mapas de conexión, a veces es mejor que las cadenas de búsqueda. #ALEXIS 
 ## Stakeholder 2
 - Documentar todos los pasos previos hasta llegar a la cadena final, trazabilidad. #CRISTIAN 
-- Cada motor de búsqueda mantiene un estándar distinto. #CRISTIAN 
+- Cada motor de búsqueda mantiene un estándar distinto. #ALEXIS 
 - Si existe actualización de criterio no hay trazabilidad en la fase de ejecución.
-- LA TRAZABILIDAD ES IMPORTANTE PORQUE DA RIGOROSIDAD AL PROCESO. Es hacer un proceso reproducible. #PROYECTO 
+- LA TRAZABILIDAD ES IMPORTANTE PORQUE DA RIGUROSIDAD AL PROCESO. Es hacer un proceso reproducible. #PROYECTO 
 - Un trabajo debe cumplir con cuatro aspectos
 	- Cualitativo: 1. Confiabilidad, lo que sacas como resultado viene de algún lado, demostrando en proceso de transición entre el inicio y el resultado.
 ## Stakeholder 3
